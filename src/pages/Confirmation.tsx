@@ -8,7 +8,7 @@ import Button from '../components/Button';
 const Confirmation: React.FC = () => {
   const navigation = useNavigation();
   function handleInit() {
-    navigation.navigate('Welcome');
+    navigation.navigate('PlantSelect');
   }
 
   return (
