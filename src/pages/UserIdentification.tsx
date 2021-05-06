@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -11,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/core';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -35,8 +37,21 @@ const UserIdentification: React.FC = () => {
     setName(value);
   }
 
-  function handleSubmit() {
-    navigation.navigate('Confirmation');
+  async function handleSubmit() {
+    if (!name) return Alert.alert(`Me diz como chamar você 😢`);
+    try {
+      await AsyncStorage.setItem('@plantmanager:user', name);
+      navigation.navigate('Confirmation', {
+        title: 'Prontinho',
+        subtitle:
+          'Agora vamos começar a cuidar das suas plantinhas com muito cuidado.',
+        buttonTitle: 'Começar',
+        icon: 'smile',
+        nextScreen: 'PlantSelect',
+      });
+    } catch (err) {
+      Alert.alert(`Não foi possivel salvar o seu nome 😢`);
+    }
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -58,13 +73,13 @@ const UserIdentification: React.FC = () => {
                   styles.input,
                   (isFocused || isFilled) && { borderColor: colors.green },
                 ]}
-                placeholder="Digite um nome"
+                placeholder='Digite um nome'
                 onBlur={handleInputBlur}
                 onFocus={handleInputFocus}
                 onChangeText={handleInputChange}
               />
               <View style={styles.footer}>
-                <Button title="Confirmar" onPress={handleSubmit} />
+                <Button title='Confirmar' onPress={handleSubmit} />
               </View>
             </View>
           </View>

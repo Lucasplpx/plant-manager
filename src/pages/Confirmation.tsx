@@ -1,29 +1,51 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/core';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import Button from '../components/Button';
 
+interface Params {
+  title: string;
+  subtitle: string;
+  buttonTitle: string;
+  icon: 'smile' | 'hug';
+  nextScreen: string;
+}
+
+const emojis = {
+  hug: '🤗',
+  smile: '😁',
+};
+
 const Confirmation: React.FC = () => {
   const navigation = useNavigation();
+
+  const routes = useRoute();
+
+  const {
+    title,
+    subtitle,
+    buttonTitle,
+    icon,
+    nextScreen,
+  } = routes.params as Params;
+
   function handleInit() {
-    navigation.navigate('PlantSelect');
+    navigation.navigate(nextScreen);
   }
 
   return (
     <SafeAreaView style={sytles.container}>
       <View style={sytles.content}>
-        <Text style={sytles.emoji}>😄</Text>
+        <Text style={sytles.emoji}>{emojis[icon]}</Text>
 
-        <Text style={sytles.title}>Prontinho</Text>
+        <Text style={sytles.title}>{title}</Text>
 
-        <Text style={sytles.subtitle}>
-          Agora vamos começar a cuidar das suas plantinhas com muito cuidado.
-        </Text>
+        <Text style={sytles.subtitle}>{subtitle}</Text>
 
         <View style={sytles.footer}>
-          <Button title="Começar" onPress={handleInit} />
+          <Button title={buttonTitle} onPress={handleInit} />
         </View>
       </View>
     </SafeAreaView>
